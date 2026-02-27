@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adukala Navigator— Find Your Next Meal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <header class="hero">
+    <div class="logo">🍽 Adukala navigator</div>
+    <div class="hero-text">
+      <h1>Discover food spots <br><span class="highlight">near you</span></h1>
+      <p class="subtitle">Hidden gems. Local favourites. Trending now. All in one place.</p>
+      <button id="findBtn" onclick="findFood()">
+        <span class="btn-icon">📍</span> Find Food Near Me
+      </button>
+      <p class="location-status" id="locationStatus"></p>
+    </div>
+    <div class="filter-row" id="filterRow" style="display:none">
+      <button class="chip active" onclick="filterBy('all', this)">🌍 All</button>
+      <button class="chip" onclick="filterBy('hidden', this)">💎 Hidden Gems</button>
+      <button class="chip" onclick="filterBy('popular', this)">🔥 Popular</button>
+      <button class="chip" onclick="filterBy('toprated', this)">⭐ Top Rated</button>
+      <button class="chip" onclick="filterBy('budget', this)">💸 Budget</button>
+    </div>
+  </header>
+
+  <div id="mapContainer" class="map-container" style="display:none">
+    <div id="map"></div>
+    <div class="map-label">📍 Showing spots near you</div>
+  </div>
+
+  <div class="loading" id="loading" style="display:none">
+    <div class="spinner"></div>
+    <p>Sniffing out the best spots...</p>
+  </div>
+
+  <section class="results-section" id="resultsSection" style="display:none">
+    <div class="results-header">
+      <h2 id="resultsTitle">Nearby Food Spots</h2>
+      <span class="results-count" id="resultsCount"></span>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </section>
+
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- NO API KEY NEEDED — Leaflet is free -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
