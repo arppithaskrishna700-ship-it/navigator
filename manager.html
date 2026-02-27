@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manager Dashboard – Adukala Navigator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/manager.css"/>
+</head>
+<body class="manager-page">
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-logo">🍛</div>
+      <h1>Manager Portal</h1>
+      <p>List and manage your food spot on Adukala Navigator</p>
+      <div class="fg"><label>Email</label><input type="email" id="loginEmail" placeholder="you@restaurant.com"/></div>
+      <div class="fg"><label>Password</label><input type="password" id="loginPwd" placeholder="••••••••"/></div>
+      <div class="login-error" id="loginError"></div>
+      <button class="form-submit" id="loginBtn">Login to Dashboard</button>
+      <p class="login-hint">Demo: use any email + password "demo123"</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none">
+    <aside class="dash-sidebar">
+      <div class="dash-brand">🍛 Adukala</div>
+      <nav class="dash-nav">
+        <a class="dash-link active" data-tab="overview">📊 Overview</a>
+        <a class="dash-link" data-tab="myspot">🏠 My Spot</a>
+        <a class="dash-link" data-tab="photos">📷 Photos</a>
+        <a class="dash-link" data-tab="menu">🍽️ Menu & Pricing</a>
+        <a class="dash-link" data-tab="reviews">⭐ Reviews</a>
+        <a class="dash-link" data-tab="map">🗺️ Map Preview</a>
+      </nav>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="dash-main">
+      <!-- OVERVIEW TAB -->
+      <div class="tab-panel active" id="tab-overview">
+        <h2>Welcome back, <span id="managerName">Manager</span></h2>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="statViews">0</div><div class="stat-lbl">Profile Views</div></div>
+          <div class="stat-card"><div class="stat-num" id="statRating">—</div><div class="stat-lbl">Avg Rating</div></div>
+          <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-lbl">Reviews</div></div>
+          <div class="stat-card"><div class="stat-num" id="statSaves">0</div><div class="stat-lbl">Saves</div></div>
+        </div>
+        <div class="overview-cards">
+          <div class="ov-card">
+            <h3>Quick Actions</h3>
+            <button class="ov-btn" onclick="switchTab('myspot')">✏️ Edit Spot Info</button>
+            <button class="ov-btn" onclick="switchTab('photos')">📷 Upload Photos</button>
+            <button class="ov-btn" onclick="switchTab('menu')">🍽️ Update Menu</button>
+            <a href="map.html" class="ov-btn" target="_blank">🗺️ View on Map</a>
+          </div>
+          <div class="ov-card">
+            <h3>Recent Reviews</h3>
+            <div id="recentReviews"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY SPOT TAB -->
+      <div class="tab-panel" id="tab-myspot">
+        <h2>My Spot Details</h2>
+        <div class="spot-form">
+          <div class="form-row2">
+            <div class="fg"><label>Spot Name *</label><input id="m-name" placeholder="Restaurant / stall name"/></div>
+            <div class="fg"><label>Area *</label><input id="m-area" placeholder="Neighbourhood, Kochi"/></div>
+          </div>
+          <div class="form-row2">
+            <div class="fg"><label>Latitude</label><input id="m-lat" placeholder="9.9573"/></div>
+            <div class="fg"><label>Longitude</label><input id="m-lng" placeholder="76.2562"/></div>
+          </div>
+          <div class="form-row2">
+            <div class="fg"><label>Category</label>
+              <select id="m-type">
+                <option value="local">Local Favourite</option>
+                <option value="hidden">Hidden Gem</option>
+                <option value="street">Street Food</option>
+                <option value="seafood">Seafood</option>
+              </select>
+            </div>
+            <div class="fg"><label>Phone / Contact *</label><input id="m-contact" placeholder="+91 98xxxxxxxx"/></div>
+          </div>
+          <div class="fg"><label>Description</label><textarea id="m-desc" placeholder="Tell visitors what makes your place special…"></textarea></div>
+          <div class="form-row2">
+            <div class="fg"><label>Opening Hours</label><input id="m-timing" placeholder="7am – 10pm"/></div>
+            <div class="fg"><label>Price Range</label><input id="m-price" placeholder="₹80–200"/></div>
+          </div>
+          <div class="fg"><label>Must Try Dish</label><input id="m-must" placeholder="e.g. Karimeen Fry"/></div>
+          <div class="fg"><label>Google Maps Link (optional)</label><input id="m-gmaps" placeholder="https://maps.google.com/…"/></div>
+          <button class="form-submit" id="saveSpotBtn">💾 Save Changes</button>
+        </div>
+      </div>
+
+      <!-- PHOTOS TAB -->
+      <div class="tab-panel" id="tab-photos">
+        <h2>Photos</h2>
+        <div class="photo-upload-area" id="photoDropZone">
+          <div class="upload-icon">📷</div>
+          <p>Drag & drop photos here or click to upload</p>
+          <input type="file" id="photoInput" accept="image/*" multiple style="display:none"/>
+          <button class="ov-btn" onclick="document.getElementById('photoInput').click()">Choose Photos</button>
+        </div>
+        <div class="photo-tip">Or paste image URLs below:</div>
+        <div class="photo-url-input">
+          <input type="text" id="photoUrl" placeholder="https://example.com/food.jpg"/>
+          <button class="form-submit small" id="addPhotoUrl">Add</button>
+        </div>
+        <div class="photos-grid" id="photosGrid"></div>
+      </div>
+
+      <!-- MENU TAB -->
+      <div class="tab-panel" id="tab-menu">
+        <h2>Menu & Pricing</h2>
+        <div class="menu-add">
+          <div class="form-row2">
+            <div class="fg"><label>Dish Name</label><input id="dish-name" placeholder="e.g. Karimeen Fry"/></div>
+            <div class="fg"><label>Price (₹)</label><input id="dish-price" type="number" placeholder="180"/></div>
+          </div>
+          <div class="form-row2">
+            <div class="fg"><label>Category</label>
+              <select id="dish-cat">
+                <option>Main Course</option>
+                <option>Starters</option>
+                <option>Breakfast</option>
+                <option>Snacks</option>
+                <option>Beverages</option>
+                <option>Desserts</option>
+              </select>
+            </div>
+            <div class="fg"><label>Veg/Non-veg</label>
+              <select id="dish-veg">
+                <option value="nonveg">Non-Veg 🍗</option>
+                <option value="veg">Veg 🌿</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg"><label>Description (optional)</label><input id="dish-desc" placeholder="Short description…"/></div>
+          <button class="form-submit" id="addDishBtn">+ Add Dish</button>
+        </div>
+        <div class="menu-list" id="menuList"></div>
+      </div>
+
+      <!-- REVIEWS TAB -->
+      <div class="tab-panel" id="tab-reviews">
+        <h2>Customer Reviews</h2>
+        <div class="rating-summary" id="ratingSummary"></div>
+        <div class="reviews-list" id="reviewsList"></div>
+      </div>
+
+      <!-- MAP PREVIEW TAB -->
+      <div class="tab-panel" id="tab-map">
+        <h2>Map Preview</h2>
+        <p class="map-hint">This is how your spot appears on the public map.</p>
+        <div id="managerMap" style="height:400px;border-radius:12px;overflow:hidden;"></div>
+        <a href="map.html" target="_blank" class="form-submit" style="display:inline-block;margin-top:1rem;text-decoration:none">🗺️ Open Public Map</a>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/manager.js"></script>
+</body>
+</html>

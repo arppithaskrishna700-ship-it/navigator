@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explore Map – Adukala Navigator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/map.css"/>
+</head>
+<body class="map-page">
+
+  <div class="map-header">
+    <a href="index.html" class="back-link">← Home</a>
+    <div class="map-brand">🍛 Adukala Navigator</div>
+    <div class="map-header-right">
+      <button class="locate-btn" id="locateBtn">📍 My Location</button>
+      <button class="add-btn" id="openAddModal">+ Add Hidden Spot</button>
+    </div>
+  </div>
+
+  <div class="map-body">
+    <!-- SIDEBAR -->
+    <aside class="map-sidebar">
+      <div class="sidebar-search">
+        <input type="text" id="searchInput" placeholder="🔍  Search spots, areas…"/>
+      </div>
+      <div class="filter-row" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="hidden">Hidden</button>
+        <button class="filter-btn" data-filter="local">Local</button>
+        <button class="filter-btn" data-filter="street">Street</button>
+        <button class="filter-btn" data-filter="seafood">Seafood</button>
+      </div>
+      <div class="price-filter">
+        <label>Max Price: <strong id="priceLabel">₹500</strong></label>
+        <input type="range" id="priceRange" min="50" max="1000" value="1000" step="50"/>
+      </div>
+      <div class="sidebar-count">
+        <span id="spotCount">0</span> spots found
+      </div>
+      <div class="spots-list" id="spotsList"></div>
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div>🥺</div><p>No spots found.<br/>Try a different filter.</p>
+      </div>
+    </aside>
+
+    <!-- MAP -->
+    <div id="map"></div>
+  </div>
+
+  <!-- ADD SPOT MODAL -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal">
+      <div class="modal-hd">
+        <h2>📍 Add a Hidden Spot</h2>
+        <button class="modal-x" id="closeAddModal">✕</button>
+      </div>
+      <div class="modal-bd">
+        <div class="form-row2">
+          <div class="fg"><label>Spot Name *</label><input id="a-name" placeholder="e.g. Irfan's Chai Stall"/></div>
+          <div class="fg"><label>Area *</label><input id="a-area" placeholder="e.g. Mattancherry"/></div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label>Latitude *</label><input id="a-lat" placeholder="9.9573"/></div>
+          <div class="fg"><label>Longitude *</label><input id="a-lng" placeholder="76.2562"/></div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label>Category</label>
+            <select id="a-type">
+              <option value="hidden">Hidden Gem</option>
+              <option value="local">Local Favourite</option>
+              <option value="street">Street Food</option>
+              <option value="seafood">Seafood</option>
+            </select>
+          </div>
+          <div class="fg"><label>Price Range</label><input id="a-price" placeholder="₹40–80"/></div>
+        </div>
+        <div class="fg"><label>Description *</label><textarea id="a-desc" placeholder="What makes it special?"></textarea></div>
+        <div class="form-row2">
+          <div class="fg"><label>Timings</label><input id="a-timing" placeholder="7am – 2pm"/></div>
+          <div class="fg"><label>Must Try</label><input id="a-must" placeholder="Fish Curry Rice"/></div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label>Contact / Phone</label><input id="a-contact" placeholder="+91 98xxxxxxxx"/></div>
+          <div class="fg"><label>Rating (1–5)</label><input id="a-rating" type="number" min="1" max="5" placeholder="4.5"/></div>
+        </div>
+        <div class="fg"><label>Photo URL (optional)</label><input id="a-photo" placeholder="https://…"/></div>
+        <div class="form-error" id="addError"></div>
+        <button class="form-submit" id="submitAddBtn">📍 Add to Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPOT DETAIL DRAWER -->
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <div class="drawer-content" id="drawerContent"></div>
+  </div>
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>

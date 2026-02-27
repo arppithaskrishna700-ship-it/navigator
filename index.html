@@ -1,69 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adukala Navigator— Find Your Next Meal</title>
+  <title>Adukala Navigator – Kochi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css"/>
 </head>
-<body>
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<body class="landing">
 
-  <header class="hero">
-    <div class="logo">🍽 Adukala navigator</div>
-    <div class="hero-text">
-      <h1>Discover food spots <br><span class="highlight">near you</span></h1>
-      <p class="subtitle">Hidden gems. Local favourites. Trending now. All in one place.</p>
-      <button id="findBtn" onclick="findFood()">
-        <span class="btn-icon">📍</span> Find Food Near Me
-      </button>
-      <p class="location-status" id="locationStatus"></p>
+  <nav class="top-nav">
+    <div class="nav-brand">🍛 Adukala Navigator</div>
+    <div class="nav-links">
+      <a href="map.html">Explore Map</a>
+      <a href="manager.html" class="btn-outline">Manager Login</a>
     </div>
-    <div class="filter-row" id="filterRow" style="display:none">
-      <button class="chip active" onclick="filterBy('all', this)">🌍 All</button>
-      <button class="chip" onclick="filterBy('hidden', this)">💎 Hidden Gems</button>
-      <button class="chip" onclick="filterBy('popular', this)">🔥 Popular</button>
-      <button class="chip" onclick="filterBy('toprated', this)">⭐ Top Rated</button>
-      <button class="chip" onclick="filterBy('budget', this)">💸 Budget</button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg-text">ADUKALA</div>
+    <div class="hero-content">
+      <span class="hero-kicker">Hidden Food Spots of Kochi</span>
+      <h1>Find the <em>real</em> taste of Kerala</h1>
+      <p>From dawn dosa stalls to midnight parotta shacks — discover the food spots locals never post about.</p>
+      <div class="hero-actions">
+        <a href="map.html" class="btn-primary">🗺️ Explore the Map</a>
+        <a href="manager.html" class="btn-secondary">List Your Spot</a>
+      </div>
     </div>
-  </header>
-
-  <div id="mapContainer" class="map-container" style="display:none">
-    <div id="map"></div>
-    <div class="map-label">📍 Showing spots near you</div>
-  </div>
-
-  <div class="loading" id="loading" style="display:none">
-    <div class="spinner"></div>
-    <p>Sniffing out the best spots...</p>
-  </div>
-
-  <section class="results-section" id="resultsSection" style="display:none">
-    <div class="results-header">
-      <h2 id="resultsTitle">Nearby Food Spots</h2>
-      <span class="results-count" id="resultsCount"></span>
+    <div class="hero-stats">
+      <div class="stat"><span id="statSpots">25+</span><small>Hidden Spots</small></div>
+      <div class="stat"><span>8</span><small>Neighbourhoods</small></div>
+      <div class="stat"><span>4.8★</span><small>Avg Rating</small></div>
     </div>
-    <div class="cards-grid" id="cardsGrid"></div>
   </section>
 
-  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeModal()">✕</button>
-      <div id="modalContent"></div>
+  <section class="categories">
+    <h2>What are you looking for?</h2>
+    <div class="cat-grid">
+      <a href="map.html?filter=hidden" class="cat-card">
+        <div class="cat-icon">🔍</div>
+        <h3>Hidden Gems</h3>
+        <p>Spots only locals know about</p>
+      </a>
+      <a href="map.html?filter=local" class="cat-card">
+        <div class="cat-icon">🏠</div>
+        <h3>Local Favourites</h3>
+        <p>Neighbourhood staples for decades</p>
+      </a>
+      <a href="map.html?filter=street" class="cat-card">
+        <div class="cat-icon">🛺</div>
+        <h3>Street Food</h3>
+        <p>Carts, stalls & roadside legends</p>
+      </a>
+      <a href="map.html?filter=seafood" class="cat-card">
+        <div class="cat-icon">🦐</div>
+        <h3>Seafood</h3>
+        <p>Straight from the backwaters</p>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <!-- NO API KEY NEEDED — Leaflet is free -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script>
-  <!-- ADD THESE 2 LINES just before </body> -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
-<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-<script src="app.js"></script>
+  <section class="featured">
+    <h2>Featured Spots</h2>
+    <div class="featured-grid" id="featuredGrid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-brand">🍛 Adukala Navigator</div>
+    <p>Made with love in Kochi · Hidden spots deserve to be found</p>
+    <div class="footer-links">
+      <a href="map.html">Explore</a>
+      <a href="manager.html">For Managers</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    // Populate featured spots
+    const featured = getAllSpots().slice(0, 6);
+    document.getElementById('featuredGrid').innerHTML = featured.map(s => `
+      <a href="spot.html?id=${s.id}" class="feat-card">
+        <div class="feat-img" style="background:${s.color || '#e8a034'}22">
+          <span class="feat-emoji">${s.emoji || '🍽️'}</span>
+        </div>
+        <div class="feat-info">
+          <span class="feat-tag tag-${s.type}">${tagLabel(s.type)}</span>
+          <h3>${s.name}</h3>
+          <p class="feat-area">📍 ${s.area}</p>
+          <div class="feat-meta">
+            <span>⭐ ${s.rating}</span>
+            <span>💰 ${s.price}</span>
+          </div>
+        </div>
+      </a>
+    `).join('');
+    document.getElementById('statSpots').textContent = getAllSpots().length + '+';
+  </script>
 </body>
 </html>

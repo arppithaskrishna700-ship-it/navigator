@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spot Detail – Adukala Navigator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <style>
+    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; }
+    .spot-hero { min-height: 300px; display: flex; align-items: center; justify-content: center; background: var(--card); position: relative; overflow: hidden; }
+    .spot-hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1a120a, #0e0b08); }
+    .spot-hero-emoji { font-size: 6rem; position: relative; z-index: 1; }
+    .spot-hero-img { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.35; }
+    .spot-detail-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .spot-back { display: inline-block; margin-bottom: 1.5rem; color: var(--muted); text-decoration: none; font-size: 0.85rem; }
+    .spot-back:hover { color: var(--accent); }
+    .spot-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .spot-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--text); }
+    .spot-rating-big { display: flex; align-items: center; gap: 0.5rem; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+    .spot-meta-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0 1.5rem; }
+    .spot-meta-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: var(--muted); }
+    .spot-meta-item strong { color: var(--text); }
+    .spot-desc-full { font-size: 1rem; line-height: 1.8; color: #c0b0a0; margin-bottom: 2rem; }
+    .spot-section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent); }
+    .photos-scroll { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 2rem; }
+    .photos-scroll img { height: 180px; width: 260px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+    .photos-scroll .photo-placeholder { height: 180px; width: 260px; background: var(--card); border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 1px solid var(--border); }
+    .spot-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+    .spot-map-box { height: 250px; border-radius: 12px; overflow: hidden; }
+    .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+    .menu-item-name { font-size: 0.9rem; color: var(--text); }
+    .menu-item-price { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+    .menu-item-tag { font-size: 0.65rem; background: rgba(46,204,113,0.15); color: #2ecc71; border-radius: 99px; padding: 0.15rem 0.5rem; margin-left: 0.4rem; }
+    .review-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
+    .review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .reviewer-name { font-weight: 600; font-size: 0.9rem; }
+    .review-stars { color: var(--accent); }
+    .review-text { font-size: 0.85rem; color: #a09080; line-height: 1.6; }
+    .add-review-form { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-top: 1rem; }
+    .star-picker { display: flex; gap: 0.4rem; margin: 0.5rem 0 1rem; }
+    .star-picker span { font-size: 1.5rem; cursor: pointer; opacity: 0.4; transition: opacity 0.15s; }
+    .star-picker span.active { opacity: 1; }
+    .navigate-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #0e0b08; padding: 0.75rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: 0.95rem; text-decoration: none; margin-top: 1rem; transition: opacity 0.2s; }
+    .navigate-btn:hover { opacity: 0.85; }
+    @media (max-width: 640px) { .spot-two-col { grid-template-columns: 1fr; } .spot-title { font-size: 1.6rem; } }
+  </style>
+</head>
+<body>
+
+  <div class="spot-hero" id="spotHero">
+    <div class="spot-hero-bg"></div>
+    <div class="spot-hero-emoji" id="heroEmoji">🍽️</div>
+  </div>
+
+  <div class="spot-detail-wrap">
+    <a href="map.html" class="spot-back">← Back to Map</a>
+
+    <div class="spot-title-row">
+      <div>
+        <div class="spot-title" id="spotTitle">Loading…</div>
+        <div style="margin-top:0.3rem;font-size:0.85rem;color:var(--muted)" id="spotArea"></div>
+      </div>
+      <div class="spot-rating-big" id="spotRating"></div>
+    </div>
+
+    <div class="spot-meta-row" id="spotMetaRow"></div>
+    <p class="spot-desc-full" id="spotDesc"></p>
+
+    <h3 class="spot-section-title">📷 Photos</h3>
+    <div class="photos-scroll" id="photosScroll"></div>
+
+    <div class="spot-two-col">
+      <div>
+        <h3 class="spot-section-title">🍽️ Menu & Pricing</h3>
+        <div id="menuItems"></div>
+      </div>
+      <div>
+        <h3 class="spot-section-title">🗺️ Location</h3>
+        <div class="spot-map-box" id="spotMap"></div>
+        <a id="navigateBtn" href="#" class="navigate-btn" target="_blank">🧭 Get Directions</a>
+      </div>
+    </div>
+
+    <h3 class="spot-section-title">⭐ Reviews</h3>
+    <div id="reviewsContainer"></div>
+
+    <div class="add-review-form">
+      <h4 style="margin-bottom:0.5rem;color:var(--text)">Leave a Review</h4>
+      <input id="reviewName" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.8rem;border-radius:8px;width:100%;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:0.75rem;" placeholder="Your name"/>
+      <div class="star-picker" id="starPicker">
+        <span data-val="1">★</span><span data-val="2">★</span>
+        <span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
+      </div>
+      <textarea id="reviewText" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.8rem;border-radius:8px;width:100%;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;min-height:80px;resize:vertical;" placeholder="Share your experience…"></textarea>
+      <button class="form-submit" id="submitReview" style="margin-top:0.75rem;">Submit Review</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = parseInt(params.get('id'));
+    const spot = getAllSpots().find(s => s.id === id);
+
+    if (!spot) {
+      document.body.innerHTML = '<div style="text-align:center;padding:4rem;color:#e8a034;font-family:Syne,sans-serif"><h2>Spot not found</h2><a href="map.html" style="color:#e8a034">← Back to Map</a></div>';
+    } else {
+      document.title = spot.name + ' – Adukala Navigator';
+      document.getElementById('heroEmoji').textContent = spot.emoji || '🍽️';
+      document.getElementById('spotTitle').textContent = spot.name;
+      document.getElementById('spotArea').textContent = '📍 ' + spot.area;
+      document.getElementById('spotRating').textContent = '⭐ ' + spot.rating;
+      document.getElementById('spotDesc').textContent = spot.desc;
+
+      // Meta row
+      document.getElementById('spotMetaRow').innerHTML = `
+        <div class="spot-meta-item">💰 <strong>${spot.price}</strong></div>
+        <div class="spot-meta-item">⏰ <strong>${spot.timing}</strong></div>
+        <div class="spot-meta-item">🍽️ Must try: <strong>${spot.must}</strong></div>
+        ${spot.contact ? `<div class="spot-meta-item">📞 <strong>${spot.contact}</strong></div>` : ''}
+        <div class="spot-meta-item"><span class="spot-tag tag-${spot.type}" style="padding:0.2rem 0.7rem;border-radius:999px;font-size:0.72rem;text-transform:uppercase;font-weight:600">${tagLabel(spot.type)}</span></div>
+      `;
+
+      // Photos
+      const photos = spot.photos || [];
+      document.getElementById('photosScroll').innerHTML = photos.length
+        ? photos.map(p => `<img src="${p}" alt="${spot.name}" onerror="this.style.display='none'"/>`).join('')
+        : `<div class="photo-placeholder">${spot.emoji||'🍽️'}</div><div class="photo-placeholder">📷</div>`;
+
+      // Menu
+      const menu = spot.menu || [{ name: spot.must, price: '—', veg: false }];
+      document.getElementById('menuItems').innerHTML = menu.map(m => `
+        <div class="menu-item">
+          <span class="menu-item-name">${m.name}${m.veg ? '<span class="menu-item-tag">Veg</span>' : ''}</span>
+          <span class="menu-item-price">₹${m.price}</span>
+        </div>
+      `).join('');
+
+      // Spot map
+      const smap = L.map('spotMap', { center: [spot.lat, spot.lng], zoom: 15, zoomControl: false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(smap);
+      L.marker([spot.lat, spot.lng]).addTo(smap).bindPopup(spot.name).openPopup();
+
+      // Navigate button
+      document.getElementById('navigateBtn').href =
+        `https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`;
+
+      // Reviews
+      const storedReviews = JSON.parse(localStorage.getItem('reviews_' + id) || '[]');
+      const allReviews = [...(spot.reviews || []), ...storedReviews];
+      function renderReviews() {
+        const rev = [...(spot.reviews||[]), ...JSON.parse(localStorage.getItem('reviews_'+id)||'[]')];
+        document.getElementById('reviewsContainer').innerHTML = rev.length
+          ? rev.map(r => `<div class="review-card"><div class="review-top"><span class="reviewer-name">${r.name}</span><span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></div><p class="review-text">${r.text}</p></div>`).join('')
+          : '<p style="color:var(--muted);font-size:0.85rem">No reviews yet. Be the first!</p>';
+      }
+      renderReviews();
+
+      // Star picker
+      let pickedRating = 0;
+      document.querySelectorAll('#starPicker span').forEach(s => {
+        s.addEventListener('click', () => {
+          pickedRating = parseInt(s.dataset.val);
+          document.querySelectorAll('#starPicker span').forEach((st, i) => st.classList.toggle('active', i < pickedRating));
+        });
+      });
+
+      document.getElementById('submitReview').addEventListener('click', () => {
+        const name = document.getElementById('reviewName').value.trim() || 'Anonymous';
+        const text = document.getElementById('reviewText').value.trim();
+        if (!text || !pickedRating) return;
+        const existing = JSON.parse(localStorage.getItem('reviews_'+id)||'[]');
+        existing.push({ name, rating: pickedRating, text });
+        localStorage.setItem('reviews_'+id, JSON.stringify(existing));
+        document.getElementById('reviewName').value = '';
+        document.getElementById('reviewText').value = '';
+        pickedRating = 0;
+        document.querySelectorAll('#starPicker span').forEach(s => s.classList.remove('active'));
+        renderReviews();
+      });
+    }
+  </script>
+</body>
+</html>
