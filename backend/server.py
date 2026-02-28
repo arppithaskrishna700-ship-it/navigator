@@ -24,13 +24,8 @@ def save_spots(spots):
         json.dump(spots, f, indent=2)
 
 # ── Serve frontend ────────────────────────────────
-@app.route('/')
-def index():
-    return send_from_directory('.', 'index.html')
 
-@app.route('/<path:path>')
-def static_files(path):
-    return send_from_directory('.', path)
+
 
 # ── API: Get all user-submitted spots ─────────────
 @app.route('/api/spots', methods=['GET'])
@@ -96,5 +91,6 @@ def get_all():
     return jsonify({'count': len(load_spots()), 'spots': load_spots()})
 
 if __name__ == '__main__':
-    print("🍛 Adukala Navigator backend running at http://localhost:5000")
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🍛 Adukala Navigator backend running on port {port}")
+    app.run(host="0.0.0.0", port=port)
