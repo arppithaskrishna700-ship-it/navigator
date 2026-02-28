@@ -169,12 +169,23 @@
         });
       });
 
-      document.getElementById('submitReview').addEventListener('click', () => {
+      document.getElementById('submitReview').addEventListener('click', async () => {
         const name = document.getElementById('reviewName').value.trim() || 'Anonymous';
         const text = document.getElementById('reviewText').value.trim();
         if (!text || !pickedRating) return;
+        const apiReview = { name, rating: pickedRating, text };
+        try {
+          const response = await fetch(`https://navigator-cx9d.onrender.com/api/spots/${id}/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(apiReview)
+          });
+          if (!response.ok) throw new Error('API error');
+        } catch (e) {
+          console.log('Saving review to localStorage instead');
+        }
         const existing = JSON.parse(localStorage.getItem('reviews_'+id)||'[]');
-        existing.push({ name, rating: pickedRating, text });
+        existing.push(apiReview);
         localStorage.setItem('reviews_'+id, JSON.stringify(existing));
         document.getElementById('reviewName').value = '';
         document.getElementById('reviewText').value = '';

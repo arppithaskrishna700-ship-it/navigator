@@ -143,7 +143,7 @@ function clearAddForm() {
   const err = document.getElementById('addError'); err.style.display = 'none';
 }
 
-document.getElementById('submitAddBtn').addEventListener('click', () => {
+document.getElementById('submitAddBtn').addEventListener('click', async () => {
   const name    = document.getElementById('a-name').value.trim();
   const area    = document.getElementById('a-area').value.trim();
   const lat     = parseFloat(document.getElementById('a-lat').value);
@@ -163,7 +163,7 @@ document.getElementById('submitAddBtn').addEventListener('click', () => {
   errEl.style.display = 'none';
 
   const newSpot = { id: Date.now(), name, area, type, lat, lng, desc, price, timing, must, contact, rating, emoji: '📍', photos: photo ? [photo] : [], menu: [], reviews: [] };
-  saveUserSpot(newSpot);
+  await saveUserSpot(newSpot);
   addModal.classList.remove('open');
   clearAddForm();
   render();

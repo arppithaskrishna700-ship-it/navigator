@@ -205,17 +205,51 @@ const SPOTS_DATA = [
   }
 ];
 
+const API_BASE = 'https://navigator-cx9d.onrender.com';
+
+async function fetchUserSpotsFromApi() {
+  try {
+    const response = await fetch(`${API_BASE}/api/spots`);
+    if (response.ok) return await response.json();
+  } catch (e) {
+    console.error('Error fetching from API:', e);
+  }
+  // Fallback to localStorage
+  try { return JSON.parse(localStorage.getItem('adukalUserSpots') || '[]'); } catch(e) { return []; }
+}
+
 function getAllSpots() {
   let userSpots = [];
   try { userSpots = JSON.parse(localStorage.getItem('adukalUserSpots') || '[]'); } catch(e) {}
   return [...SPOTS_DATA, ...userSpots];
 }
 
+async function getAllSpotsAsync() {
+  const apiSpots = await fetchUserSpotsFromApi();
+  return [...SPOTS_DATA, ...apiSpots];
+}
+
 function getSpotById(id) {
   return getAllSpots().find(s => s.id === id);
 }
 
-function saveUserSpot(spot) {
+async function saveUserSpot(spot) {
+  // Save to API
+  try {
+    const response = await fetch(`${API_BASE}/api/spots`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(spot)
+    });
+    if (response.ok) {
+      console.log('Spot saved to API');
+      return;
+    }
+  } catch (e) {
+    console.error('Error saving to API:', e);
+  }
+  
+  // Fallback to localStorage
   let userSpots = [];
   try { userSpots = JSON.parse(localStorage.getItem('adukalUserSpots') || '[]'); } catch(e) {}
   userSpots.push(spot);
