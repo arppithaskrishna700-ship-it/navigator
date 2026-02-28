@@ -57,7 +57,7 @@ body.map-page { overflow: hidden; display: flex; flex-direction: column; height:
 .sc-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--text); line-height: 1.2; }
 .sc-area { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.4rem; }
 .sc-area span { color: var(--accent); }
-.sc-desc { font-size: 0.77rem; color: #a09080; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.5rem; }
+.sc-desc { font-size: 0.77rem; color: #a09080; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.5rem; }
 .sc-meta { display: flex; gap: 0.8rem; font-size: 0.7rem; color: var(--muted); align-items: center; }
 .sc-detail-link { font-size: 0.7rem; color: var(--accent); text-decoration: none; margin-left: auto; }
 .sc-detail-link:hover { text-decoration: underline; }

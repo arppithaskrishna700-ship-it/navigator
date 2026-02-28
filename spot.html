@@ -6,7 +6,7 @@
   <title>Spot Detail – Adukala Navigator</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="main.css"/>
   <style>
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; }
     .spot-hero { min-height: 300px; display: flex; align-items: center; justify-content: center; background: var(--card); position: relative; overflow: hidden; }
@@ -99,8 +99,8 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/utils.js"></script>
+  <script src="data.js"></script>
+  <script src="utilis.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const id = parseInt(params.get('id'));
